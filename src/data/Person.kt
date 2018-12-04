@@ -1,4 +1,4 @@
-package geometry.example
+package data
 
 data class Person(
     val name: String,

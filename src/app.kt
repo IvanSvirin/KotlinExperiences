@@ -1,18 +1,25 @@
-import expressions.Num
-import expressions.Sum
-import expressions.eval
-import expressions.evalWhen
-import geometry.example.Person
+import cycles.fizzBuzz
+import cycles.isLetter
+import cycles.isNotDigit
+import cycles.recognize
+import expressions.*
+import data.Person
+import exception.readNumber
+import exception.readNumberNoReturn
+import exception.readNumberNullReturn
 import geometry.shapes.*
 import geometry.shapes.Color.*
+import java.io.BufferedReader
+import java.io.StringReader
+import java.util.*
 
 fun main(args: Array<String>) {
     val persons = listOf(Person("Alice"), Person("Bob", 29))
     val oldest = persons.maxBy { it.age ?: 0 }
     println("The oldest is: $oldest")
 
-    val value = "String"
-    if (value is String) println(value.toUpperCase())
+//    val value = "String"
+//    if (value is String) println(value.toUpperCase())
 
     println(max(1, 2))
 
@@ -39,40 +46,37 @@ fun main(args: Array<String>) {
 
     println(eval(Sum(Sum(Num(1), Num(2)), Num(4))))
     println(evalWhen(Sum(Sum(Num(1), Num(2)), Num(4))))
+    println(evalWithLogging(Sum(Sum(Num(1), Num(2)), Num(4))))
+
+    for (i in 1..100) print(fizzBuzz(i))
+    println()
+    for (i in 100 downTo 1 step 2) print(fizzBuzz(i))
+    println()
+
+    val binaryReps = TreeMap<Char, String>()
+    for(c in 'A'..'F'){
+        val binary = Integer.toBinaryString(c.toInt())
+        binaryReps[c] = binary
+    }
+    for ((letter, binary) in binaryReps ) println("$letter = $binary")
+
+    val list = arrayListOf("10", "11", "1001")
+    for ((index, element) in list.withIndex()) println("$index: $element")
+
+    println(isLetter('x'))
+    println(isNotDigit('y'))
+    println(recognize('7'))
+
+    println("Kotlin" in "Java".."Scala")
+    println("Kotlin" in setOf("Java","Scala"))
+
+    val reader = BufferedReader(StringReader("239"))
+    println(readNumber(reader))
+
+    val reader1 = BufferedReader(StringReader("not a number"))
+    println(readNumberNoReturn(reader1))
+    println(readNumberNullReturn(reader1))
 }
 
 fun max(a: Int, b: Int) = if (a > b) a else b
 
-fun getMnemonic(color: Color) =
-    when (color) {
-        Color.RED -> "Каждый"
-        Color.ORANGE -> "Охотник"
-        Color.YELLOW -> "Желает"
-        Color.GREEN -> "Знать"
-        Color.BLUE -> "Где"
-        Color.INDIGO -> "Сидит"
-        Color.VIOLET -> "Фазан"
-    }
-
-fun getWarmth(color: Color) =
-    when (color) {
-        RED, ORANGE, YELLOW -> "теплый"
-        GREEN -> "нейтральный"
-        BLUE, INDIGO, VIOLET -> "холодный"
-    }
-
-fun mix(color1: Color, color2: Color) =
-    when (setOf(color1, color2)) {
-        setOf(RED, YELLOW) -> ORANGE
-        setOf(YELLOW, BLUE) -> GREEN
-        setOf(BLUE, VIOLET) -> INDIGO
-        else -> throw Exception("Грязный цвет")
-    }
-
-fun mixOptimized(c1: Color, c2: Color) =
-    when {
-        (c1 == RED && c2 == YELLOW) || (c1 == YELLOW && c2 == RED) -> ORANGE
-        (c1 == YELLOW && c2 == BLUE) || (c1 == BLUE && c2 == YELLOW) -> GREEN
-        (c1 == BLUE && c2 == VIOLET) || (c1 == VIOLET && c2 == BLUE) -> INDIGO
-        else -> throw Exception("Dirty color")
-    }
